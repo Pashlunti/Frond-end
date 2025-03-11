@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личные данные</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Личные данные</h1>
+    <form id="personalDataForm">
+        <div class="form-group">
+            <label for="fullName">ФИО:</label>
+            <input type="text" id="fullName" name="fullName" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Электронная почта:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="birthdate">Дата рождения:</label>
+            <input type="date" id="birthdate" name="birthdate" required>
+        </div>
+        <div class="form-group">
+            <label for="birthplace">Место рождения:</label>
+            <input type="text" id="birthplace" name="birthplace" required>
+        </div>
+        <div class="form-group">
+            <label for="hobbies">Увлечения:</label>
+            <input type="text" id="hobbies" name="hobbies" required>
+        </div>
+        <button type="button" onclick="saveToCookies()">Сохранить в Cookie</button>
+        <button type="button" onclick="getFromCookies()">Получить из Cookie</button>
+        <button type="button" onclick="clearCookies()">Очистить Cookie</button>
+        <button type="button" onclick="saveToLocalStorage()">Сохранить в Local Storage</button>
+        <button type="button" onclick="viewLocalStorage()">Просмотреть Local Storage</button>
+    </form>
+    <div id="resultDisplay"></div>
+
+    <script>
+        function saveToCookies() {
+            const form = document.getElementById('personalDataForm');
+            const fullName = form.fullName.value;
+            const email = form.email.value;
+            const birthdate = form.birthdate.value;
+            const birthplace = form.birthplace.value;
+            const hobbies = form.hobbies.value;
+
+            document.cookie = `fullName=${fullName};path=/;`;
+            document.cookie = `email=${email};path=/;`;
+            document.cookie = `birthdate=${birthdate};path=/;`;
+            document.cookie = `birthplace=${birthplace};path=/;`;
+            document.cookie = `hobbies=${hobbies};path=/;`;
+
+            alert('Данные сохранены в Cookie.');
+        }
+
+        function getFromCookies() {
+            const cookies = document.cookie.split('; ');
+            let data = '';
+            cookies.forEach(cookie => {
+                const [name, value] = cookie.split('=');
+                data += `${name}: ${decodeURIComponent(value)}<br>`;
+            });
+
+            document.getElementById('resultDisplay').innerHTML = data;
+        }
+
+        function clearCookies() {
+            const cookies = document.cookie.split('; ');
+            cookies.forEach(cookie => {
+                const [name] = cookie.split('=');
+                document.cookie = `${name}=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+            });
+
+            alert('Все Cookies очищены.');
+        }
+
+        function saveToLocalStorage() {
+            const cookies = document.cookie.split('; ');
+            cookies.forEach(cookie => {
+                const [name, value] = cookie.split('=');
+                localStorage.setItem(name, decodeURIComponent(value));
+            });
+
+            alert('Данные сохранены в Local Storage.');
+        }
+
+        function viewLocalStorage() {
+            let data = '';
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                data += `${key}: ${value}<br>`;
+            }
+
+            document.getElementById('resultDisplay').innerHTML = data;
+        }
+    </script>
+</body>
+</html>
