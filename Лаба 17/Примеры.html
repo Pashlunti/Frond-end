@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ИНТЕРФЕЙСНЫЕ СОБЫТИЯ</title>
+    <style>
+        #dragDropArea {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #7a0000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #scrollable {
+            width: 100%;
+            height: 100px;
+            overflow-y: scroll;
+            border: 1px solid #7a0000;
+        }
+        #scrollable div {
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>ИНТЕРФЕЙСНЫЕ СОБЫТИЯ</h1>
+
+    <!-- События мыши -->
+    <h2>События мыши</h2>
+    <button id="mouseEventButton">Нажмите меня</button>
+
+    <!-- События клавиатуры -->
+    <h2>События клавиатуры</h2>
+    <input type="text" id="keyboardEventInput" placeholder="Введите текст">
+
+    <!-- Drag & Drop события -->
+    <h2>Drag & Drop события</h2>
+    <div id="dragDropArea">Перетащите сюда</div>
+    <div id="draggable" draggable="true" style="width: 50px; height: 50px; background-color: rgb(229, 255, 0);"></div>
+
+    <!-- События указателя -->
+    <h2>События указателя</h2>
+    <div id="pointerEventArea" style="width: 100px; height: 100px; background-color: rgb(229, 255, 0);">Укажите сюда</div>
+
+    <!-- События полосы прокрутки -->
+    <h2>События полосы прокрутки</h2>
+    <div id="scrollable">
+        <div>Прокрутите вниз-></div>
+    </div>
+
+    <!-- События сенсорных экранов -->
+    <h2>События сенсорных экранов</h2>
+    <div id="touchEventArea" style="width: 100px; height: 100px; background-color: rgb(229, 255, 0);">Коснитесь сюда</div>
+
+    <!-- События с таймером -->
+    <h2>События с таймером</h2>
+    <button id="startTimer">Запустить таймер</button>
+    <div id="timerDisplay">Таймер: 0 секунд</div>
+
+    <script>
+        // События мыши
+        document.getElementById('mouseEventButton').addEventListener('click', () => {
+            alert('Кнопка нажата!');
+        });
+
+        // События клавиатуры
+        document.getElementById('keyboardEventInput').addEventListener('input', (event) => {
+            console.log(`Текущий ввод: ${event.target.value}`);
+        });
+
+        // Drag & Drop события
+        const dragDropArea = document.getElementById('dragDropArea');
+        const draggable = document.getElementById('draggable');
+
+        draggable.addEventListener('dragstart', (event) => {
+            event.dataTransfer.setData('text/plain', 'Перетаскиваемый элемент');
+        });
+
+        dragDropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+        });
+
+        dragDropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            const data = event.dataTransfer.getData('text/plain');
+            alert(`Элемент перетащен: ${data}`);
+        });
+
+        // События указателя
+        document.getElementById('pointerEventArea').addEventListener('pointerdown', () => {
+            alert('Указатель нажат!');
+        });
+
+        // События полосы прокрутки
+        document.getElementById('scrollable').addEventListener('scroll', () => {
+            console.log(`Прокручено на ${document.getElementById('scrollable').scrollTop}px`);
+        });
+
+        // События сенсорных экранов
+        document.getElementById('touchEventArea').addEventListener('touchstart', () => {
+            alert('Сенсорное событие!');
+        });
+
+        // События с таймером
+        let timerInterval;
+        document.getElementById('startTimer').addEventListener('click', () => {
+            let seconds = 0;
+            const timerDisplay = document.getElementById('timerDisplay');
+            timerDisplay.textContent = `Таймер: ${seconds} секунд`;
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                seconds++;
+                timerDisplay.textContent = `Таймер: ${seconds} секунд`;
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
