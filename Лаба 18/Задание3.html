@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Работа с объектом RegExp и регулярные выражения</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Работа с объектом RegExp и регулярные выражения</h1>
+    <form id="regexForm">
+        <div class="form-group">
+            <label for="textInput">Введите текст:</label>
+            <input type="text" id="textInput" name="textInput">
+        </div>
+        <button type="button" onclick="processText()">Обработать текст</button>
+    </form>
+    <div id="resultDisplay"></div>
+
+    <script>
+        function processText() {
+            const textInput = document.getElementById('textInput').value;
+            let result = '';
+
+            // Пример использования различных типов регулярных выражений и флагов
+            const regex1 = /hello/i; // Флаг i (игнорирование регистра)
+            const regex2 = /\d+/g; // Флаг g (глобальный поиск)
+            const regex3 = /\b\w{4}\b/; // Поиск слов длиной 4 символа
+
+            // Пример использования метода test()
+            if (regex1.test(textInput)) {
+                result += 'Найдено "hello" (игнорируя регистр).<br>';
+            }
+
+            // Пример использования метода exec()
+            const execResult = regex2.exec(textInput);
+            if (execResult) {
+                result += `Найдены цифры: ${execResult[0]}.<br>`;
+            }
+
+            // Пример использования методов объекта String
+            const splitResult = textInput.split(' ');
+            result += `Разделение текста по пробелам: ${splitResult.join(', ')}.<br>`;
+
+            const matchResult = textInput.match(regex3);
+            if (matchResult) {
+                result += `Найдены слова длиной 4 символа: ${matchResult.join(', ')}.<br>`;
+            }
+
+            const searchResult = textInput.search(regex1);
+            if (searchResult !== -1) {
+                result += `Позиция "hello" в тексте: ${searchResult}.<br>`;
+            }
+
+            const replaceResult = textInput.replace(regex2, 'NUMBER');
+            result += `Замена цифр на "NUMBER": ${replaceResult}.<br>`;
+
+            document.getElementById('resultDisplay').innerHTML = result;
+        }
+    </script>
+</body>
+</html>
