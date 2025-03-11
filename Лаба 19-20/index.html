@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интернет-магазин</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .product { border: 1px solid #ccc; padding: 10px; margin: 10px; display: inline-block; width: 200px; }
+        .cart { margin-top: 20px; }
+        .cart-item { display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <h1>Каталог товаров</h1>
+    <div id="products"></div>
+
+    <h2>Корзина</h2>
+    <div id="cart"></div>
+    <button onclick="checkout()">Оформить заказ</button>
+
+    <script>
+        // Данные о товарах в формате JSON
+        const productsData = [
+            {
+                "id": 1,
+                "name": "Ноутбук",
+                "description": "Мощный ноутбук для работы и игр.",
+                "price": 70000,
+                "image": "https://via.placeholder.com/150?text=Ноутбук"
+            },
+            {
+                "id": 2,
+                "name": "Смартфон",
+                "description": "Современный смартфон с отличной камерой.",
+                "price": 30000,
+                "image": "https://via.placeholder.com/150?text=Смартфон"
+            },
+            {
+                "id": 3,
+                "name": "Планшет",
+                "description": "Легкий и компактный планшет.",
+                "price": 20000,
+                "image": "https://via.placeholder.com/150?text=Планшет"
+            },
+            {
+                "id": 4,
+                "name": "Наушники",
+                "description": "Беспроводные наушники с хорошим звуком.",
+                "price": 5000,
+                "image": "https://via.placeholder.com/150?text=Наушники"
+            },
+            {
+                "id": 5,
+                "name": "Клавиатура",
+                "description": "Механическая клавиатура для геймеров.",
+                "price": 8000,
+                "image": "https://via.placeholder.com/150?text=Клавиатура"
+            },
+            {
+                "id": 6,
+                "name": "Мышь",
+                "description": "Игровая мышь с подсветкой.",
+                "price": 4000,
+                "image": "https://via.placeholder.com/150?text=Мышь"
+            },
+            {
+                "id": 7,
+                "name": "Монитор",
+                "description": "27-дюймовый монитор с высоким разрешением.",
+                "price": 25000,
+                "image": "https://via.placeholder.com/150?text=Монитор"
+            },
+            {
+                "id": 8,
+                "name": "Внешний жесткий диск",
+                "description": "1 ТБ для хранения ваших данных.",
+                "price": 6000,
+                "image": "https://via.placeholder.com/150?text=Жесткий+диск"
+            },
+            {
+                "id": 9,
+                "name": "Флешка",
+                "description": "Флешка на 64 ГБ.",
+                "price": 1500,
+                "image": "https://via.placeholder.com/150?text=Флешка"
+            },
+            {
+                "id": 10,
+                "name": "Камера",
+                "description": "Цифровая камера с высоким качеством съемки.",
+                "price": 50000,
+                "image": "https://via.placeholder.com/150?text=Камера"
+            }
+        ];
+
+        let cart = [];
+
+        // Отображение товаров на странице
+        function displayProducts() {
+            const productsDiv = document.getElementById('products');
+            productsData.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('product');
+                
+                productDiv.innerHTML = `<img src="${product.image}" alt="${product.name}" width="100">
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <p>Цена: ${product.price} руб.</p>
+                    <button onclick="addToCart(${product.id})">Добавить в корзину</button>
+                `;
+                
+                productsDiv.appendChild(productDiv);
+            });
+        }
+
+        // Добавление товара в корзину
+        function addToCart(productId) {
+            const product = cart.find(item => item.id === productId);
+            
+            if (product) {
+                product.quantity++;
+            } else {
+                cart.push({ id: productId, quantity: 1 });
+            }
+            
+            displayCart();
+        }
+
+        // Отображение корзины
+        function displayCart() {
+            const cartDiv = document.getElementById('cart');
+            cartDiv.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartDiv.innerHTML = '<p>Корзина пуста.</p>';
+                return;
+            }
+            
+            let total = 0;
+            
+            cart.forEach(item => {
+                const product = productsData.find(p => p.id === item.id);
+                
+                if (product) {
+                    total += product.price * item.quantity;
+                    cartDiv.innerHTML += `
+                        <div class="cart-item">
+                            <span>${product.name} (x${item.quantity})</span>
+                            <span>${product.price * item.quantity} руб.</span>
+                        </div>
+                    `;
+                }
+            });
+            
+            cartDiv.innerHTML += `<p><strong>Итого: ${total} руб.</strong></p>`;
+        }
+
+        // Оформление заказа
+        function checkout() {
+            alert('Спасибо за покупку!');
+            cart = [];
+            displayCart();
+        }
+
+        // Инициализация отображения товаров
+        displayProducts();
+    </script>
+</body>
+</html>
