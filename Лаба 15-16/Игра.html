@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Собери звезды</title>
+    <style>
+        canvas { border: 1px solid black; }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+       class GameObject {
+    constructor(x, y, width, height, color) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+    }
+
+    draw(ctx) {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+
+    collidesWith(other) {
+        return this.x < other.x + other.width &&
+               this.x + this.width > other.x &&
+               this.y < other.y + other.height &&
+               this.y + this.height > other.y;
+    }
+}
+
+class Player extends GameObject {
+    constructor(x, y) {
+        super(x, y, 30, 30, 'blue');
+        this.speed = 5;
+    }
+
+    move(direction) {
+        if (direction === 'left') this.x -= this.speed;
+        if (direction === 'right') this.x += this.speed;
+    }
+}
+
+class Obstacle extends GameObject {
+    constructor(x, y) {
+        const colors = ['red', 'green', 'purple', 'orange'];
+        super(x, y, 30, 30, colors[Math.floor(Math.random() * colors.length)]);
+        this.speed = 2;
+    }
+
+    update() {
+        this.y += this.speed;
+    }
+}
+
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+document.body.appendChild(canvas);
+canvas.width = 400;
+canvas.height = 400;
+
+const player = new Player(185, 350);
+let obstacles = [new Obstacle(100, 0), new Obstacle(200, -50)];
+let score = 0;
+let gameOver = false;
+
+function gameLoop() {
+    if (gameOver) {
+        alert(`Game Over! Score: ${score}`);
+        return;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    player.draw(ctx);
+    obstacles.forEach(obstacle => {
+        obstacle.update();
+        obstacle.draw(ctx);
+        if (obstacle.collidesWith(player)) {
+            gameOver = true;
+        }
+    });
+
+    obstacles = obstacles.filter(obstacle => obstacle.y < canvas.height);
+    if (Math.random() < 0.02) {
+        obstacles.push(new Obstacle(Math.random() * (canvas.width - 30), -30));
+        score++;
+    }
+
+    ctx.fillStyle = 'black';
+    ctx.fillText(`Score: ${score}`, 10, 20);
+    requestAnimationFrame(gameLoop);
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') player.move('left');
+    if (e.key === 'ArrowRight') player.move('right');
+});
+
+gameLoop();
+    </script>
+</body>
+</html>
